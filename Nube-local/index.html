@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cloud Computing</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <img src="image/logotipo-santo-tomas-horizontal.png" alt="Logotipo de Santo Tomás">
+    <h1>Cloud Computing</h1>
+    <h2>Mi primer sistema Cloud</h2>
+    <p> Sistema creado en la asignatura Computación en la Nube del Instituto Profesional Santo Tomás </p>
+    <button id="open-system" type="button">Ingresar al sistema</button>
+
+    <div class="modal" id="inventory-modal" aria-hidden="true">
+        <div class="modal-backdrop" data-close-modal></div>
+        <section class="inventory-window" role="dialog" aria-modal="true" aria-labelledby="inventory-title">
+            <div class="window-header">
+                <div>
+                    <span class="eyebrow">Panel de control</span>
+                    <h2 id="inventory-title">Registro de ítems</h2>
+                </div>
+                <button class="close-button" type="button" aria-label="Cerrar ventana" data-close-modal>&times;</button>
+            </div>
+
+            <form id="item-form" class="item-form">
+                <label>
+                    Nombre
+                    <input id="item-name" name="name" type="text" placeholder="Nombre del ítem" required>
+                </label>
+                <label>
+                    Stock
+                    <input id="item-stock" name="stock" type="number" min="0" placeholder="0" required>
+                </label>
+                <label class="description-field">
+                    Descripción
+                    <input id="item-description" name="description" type="text" placeholder="Detalle del ítem" required>
+                </label>
+                <button class="add-button" type="submit">+ Agregar ítem</button>
+            </form>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Stock</th>
+                            <th>Descripción</th>
+                            <th><span class="sr-only">Acciones</span></th>
+                        </tr>
+                    </thead>
+                    <tbody id="items-list">
+                        <tr class="empty-row">
+                            <td colspan="5">Aún no hay ítems registrados</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const modal = document.querySelector('#inventory-modal');
+        const openButton = document.querySelector('#open-system');
+        const form = document.querySelector('#item-form');
+        const itemsList = document.querySelector('#items-list');
+        const storageKey = 'nube-local-items';
+        let items = JSON.parse(localStorage.getItem(storageKey) || '[]');
+
+        function renderItems(items) {
+            if (items.length === 0) {
+                itemsList.innerHTML = '<tr class="empty-row"><td colspan="5">Aún no hay ítems registrados</td></tr>';
+                return;
+            }
+
+            itemsList.innerHTML = items.map((item) => `
+                <tr>
+                    <td data-label="ID"><strong>${item.id}</strong></td>
+                    <td data-label="Nombre">${item.name}</td>
+                    <td data-label="Stock"><span class="stock">${item.stock}</span></td>
+                    <td data-label="Descripción">${item.description}</td>
+                    <td><button class="delete-button" type="button" data-id="${item.id}" aria-label="Eliminar ${item.name}">Eliminar</button></td>
+                </tr>
+            `).join('');
+        }
+
+        function saveItems() {
+            localStorage.setItem(storageKey, JSON.stringify(items));
+        }
+
+        function setModal(open) {
+            modal.classList.toggle('is-visible', open);
+            modal.setAttribute('aria-hidden', String(!open));
+            document.body.classList.toggle('modal-open', open);
+            if (open) document.querySelector('#item-name').focus();
+        }
+
+        openButton.addEventListener('click', () => setModal(true));
+        modal.addEventListener('click', (event) => {
+            if (event.target.closest('[data-close-modal]')) setModal(false);
+            if (event.target.matches('.delete-button')) {
+                items = items.filter((item) => item.id !== event.target.dataset.id);
+                saveItems();
+                renderItems(items);
+            }
+        });
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && modal.classList.contains('is-visible')) setModal(false);
+        });
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const formData = new FormData(form);
+            items.unshift({
+                id: `ITM-${Date.now()}`,
+                name: formData.get('name'),
+                stock: Number(formData.get('stock')),
+                description: formData.get('description')
+            });
+            saveItems();
+            form.reset();
+            renderItems(items);
+            document.querySelector('#item-name').focus();
+        });
+
+        renderItems(items);
+    </script>
+</body>
+</html>
