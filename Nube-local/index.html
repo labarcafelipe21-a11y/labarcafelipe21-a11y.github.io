@@ -1,128 +1,32 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Cloud Computing</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Nube Libros, catálogo y gestión de inventario para una librería.">
+    <title>Nube Libros | Librería</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <img src="image/logotipo-santo-tomas-horizontal.png" alt="Logotipo de Santo Tomás">
-    <h1>Cloud Computing</h1>
-    <h2>Mi primer sistema Cloud</h2>
-    <p> Sistema creado en la asignatura Computación en la Nube del Instituto Profesional Santo Tomás </p>
-    <button id="open-system" type="button">Ingresar al sistema</button>
-
-    <div class="modal" id="inventory-modal" aria-hidden="true">
-        <div class="modal-backdrop" data-close-modal></div>
-        <section class="inventory-window" role="dialog" aria-modal="true" aria-labelledby="inventory-title">
-            <div class="window-header">
-                <div>
-                    <span class="eyebrow">Panel de control</span>
-                    <h2 id="inventory-title">Registro de ítems</h2>
-                </div>
-                <button class="close-button" type="button" aria-label="Cerrar ventana" data-close-modal>&times;</button>
-            </div>
-
-            <form id="item-form" class="item-form">
-                <label>
-                    Nombre
-                    <input id="item-name" name="name" type="text" placeholder="Nombre del ítem" required>
-                </label>
-                <label>
-                    Stock
-                    <input id="item-stock" name="stock" type="number" min="0" placeholder="0" required>
-                </label>
-                <label class="description-field">
-                    Descripción
-                    <input id="item-description" name="description" type="text" placeholder="Detalle del ítem" required>
-                </label>
-                <button class="add-button" type="submit">+ Agregar ítem</button>
-            </form>
-
-            <div class="table-wrap">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nombre</th>
-                            <th>Stock</th>
-                            <th>Descripción</th>
-                            <th><span class="sr-only">Acciones</span></th>
-                        </tr>
-                    </thead>
-                    <tbody id="items-list">
-                        <tr class="empty-row">
-                            <td colspan="5">Aún no hay ítems registrados</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-    </div>
-
-    <script>
-        const modal = document.querySelector('#inventory-modal');
-        const openButton = document.querySelector('#open-system');
-        const form = document.querySelector('#item-form');
-        const itemsList = document.querySelector('#items-list');
-        const storageKey = 'nube-local-items';
-        let items = JSON.parse(localStorage.getItem(storageKey) || '[]');
-
-        function renderItems(items) {
-            if (items.length === 0) {
-                itemsList.innerHTML = '<tr class="empty-row"><td colspan="5">Aún no hay ítems registrados</td></tr>';
-                return;
-            }
-
-            itemsList.innerHTML = items.map((item) => `
-                <tr>
-                    <td data-label="ID"><strong>${item.id}</strong></td>
-                    <td data-label="Nombre">${item.name}</td>
-                    <td data-label="Stock"><span class="stock">${item.stock}</span></td>
-                    <td data-label="Descripción">${item.description}</td>
-                    <td><button class="delete-button" type="button" data-id="${item.id}" aria-label="Eliminar ${item.name}">Eliminar</button></td>
-                </tr>
-            `).join('');
-        }
-
-        function saveItems() {
-            localStorage.setItem(storageKey, JSON.stringify(items));
-        }
-
-        function setModal(open) {
-            modal.classList.toggle('is-visible', open);
-            modal.setAttribute('aria-hidden', String(!open));
-            document.body.classList.toggle('modal-open', open);
-            if (open) document.querySelector('#item-name').focus();
-        }
-
-        openButton.addEventListener('click', () => setModal(true));
-        modal.addEventListener('click', (event) => {
-            if (event.target.closest('[data-close-modal]')) setModal(false);
-            if (event.target.matches('.delete-button')) {
-                items = items.filter((item) => item.id !== event.target.dataset.id);
-                saveItems();
-                renderItems(items);
-            }
-        });
-        document.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape' && modal.classList.contains('is-visible')) setModal(false);
-        });
-        form.addEventListener('submit', (event) => {
-            event.preventDefault();
-            const formData = new FormData(form);
-            items.unshift({
-                id: `ITM-${Date.now()}`,
-                name: formData.get('name'),
-                stock: Number(formData.get('stock')),
-                description: formData.get('description')
-            });
-            saveItems();
-            form.reset();
-            renderItems(items);
-            document.querySelector('#item-name').focus();
-        });
-
-        renderItems(items);
+    <header class="site-header"><a class="brand" href="#inicio" aria-label="Nube Libros, inicio"><span class="brand-mark">N</span><span><strong>Nube</strong> Libros</span></a><nav aria-label="Navegación principal"><a href="#catalogo">Catálogo</a><a href="#historia">La librería</a><button id="open-system" class="header-action" type="button">Gestionar catálogo</button></nav></header>
+    <main id="inicio">
+        <section class="hero" aria-labelledby="hero-title"><div class="hero-copy"><p class="kicker">Librería independiente · Lecturas que dejan huella</p><h1 id="hero-title">Un buen libro siempre encuentra su lugar.</h1><p class="hero-text">Explora historias para perderte, ideas para encontrarte y un catálogo cuidado con calma.</p><div class="hero-actions"><a class="primary-action" href="#catalogo">Ver catálogo <span aria-hidden="true">↘</span></a><button class="text-action" type="button" data-open-modal>Administrar libros</button></div></div><div class="hero-note" aria-label="Nota de la librería"><span class="note-line"></span><p>Selección de la semana</p><strong>“Leer es viajar sin mover la butaca.”</strong></div></section>
+        <section class="catalog-section" id="catalogo" aria-labelledby="catalog-title"><div class="section-heading"><div><p class="kicker">El catálogo</p><h2 id="catalog-title">Historias disponibles</h2></div><button class="outline-action" type="button" data-open-modal>+ Añadir libro</button></div><div class="catalog-stats" aria-live="polite"><span><strong id="book-count">0</strong> títulos registrados</span><span><strong id="stock-count">0</strong> ejemplares en estantería</span></div><div class="book-grid" id="featured-books"><article class="book-placeholder"><span>Abriendo estanterías...</span></article></div></section>
+        <section class="about-section" id="historia" aria-labelledby="about-title"><p class="kicker">Desde 2024</p><h2 id="about-title">Una librería para leer despacio.</h2><p>En Nube Libros creemos que cada lector tiene una puerta distinta hacia una buena historia. Armamos una colección pequeña, honesta y siempre en movimiento.</p></section>
+    </main>
+    <div class="modal" id="inventory-modal" aria-hidden="true"><div class="modal-backdrop" data-close-modal></div><section class="inventory-window" role="dialog" aria-modal="true" aria-labelledby="inventory-title"><div class="window-header"><div><span class="eyebrow">Panel de catálogo</span><h2 id="inventory-title">Gestionar libros</h2></div><button class="close-button" type="button" aria-label="Cerrar ventana" data-close-modal>×</button></div><form id="item-form" class="item-form"><input id="item-id" name="id" type="hidden"><label>Título<input id="item-name" name="name" type="text" maxlength="120" placeholder="El nombre del libro" required></label><label>Autor<input id="item-author" name="author" type="text" maxlength="100" placeholder="Nombre del autor" required></label><label>Formato<select id="item-format" name="format" required><option value="">Selecciona</option><option value="Físico">Físico</option><option value="Digital">Digital</option><option value="Audiolibro">Audiolibro</option></select></label><label>Categoría<input id="item-category" name="category" type="text" maxlength="60" placeholder="Novela, ensayo..." required></label><label>ISBN<input id="item-isbn" name="isbn" type="text" inputmode="numeric" pattern="(?:[0-9]{10}|[0-9]{13})" placeholder="10 o 13 dígitos"></label><label>Precio CLP<input id="item-price" name="price" type="number" min="0" max="10000000" step="1" inputmode="numeric" placeholder="0" required></label><label>Stock<input id="item-stock" name="stock" type="number" min="0" max="9999" step="1" inputmode="numeric" placeholder="0" required></label><label class="description-field">Descripción<input id="item-description" name="description" type="text" maxlength="240" placeholder="Una breve sinopsis" required></label><div class="form-actions"><button id="cancel-edit" class="cancel-button" type="button" hidden>Cancelar edición</button><button id="submit-button" class="add-button" type="submit">+ Agregar libro</button></div></form><div class="table-wrap"><table><thead><tr><th>Libro / ID</th><th>Formato</th><th>Precio</th><th>Stock</th><th><span class="sr-only">Acciones</span></th></tr></thead><tbody id="items-list"><tr class="empty-row"><td colspan="5">Cargando catálogo...</td></tr></tbody></table></div></section></div>
+    <script type="module">
+        import { db } from '../firebase-config.js';
+        import { addDoc, collection, deleteDoc, doc, getDocs, serverTimestamp, updateDoc } from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js';
+        const modal = document.querySelector('#inventory-modal'), form = document.querySelector('#item-form'), itemsList = document.querySelector('#items-list'), booksGrid = document.querySelector('#featured-books'), itemsCollection = collection(db, 'items'); let books = [];
+        const escapeHtml = (value = '') => String(value).replace(/[&<>'"]/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[character])); const money = (value) => new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 }).format(Number(value) || 0); const clampStock = (value) => { const stock = Number.parseInt(value, 10); return Number.isInteger(stock) ? Math.min(9999, Math.max(0, stock)) : 0; }; const stableId = () => `LIB-${crypto.randomUUID().replaceAll('-', '').slice(0, 12).toUpperCase()}`;
+        function renderBooks() { document.querySelector('#book-count').textContent = books.length; document.querySelector('#stock-count').textContent = books.reduce((total, book) => total + clampStock(book.stock), 0); booksGrid.innerHTML = books.length ? books.slice(0, 4).map((book, index) => `<article class="book-card"><div class="book-cover cover-${(index % 4) + 1}"><span>${escapeHtml((book.category || 'Libro').slice(0, 12))}</span><b>${escapeHtml((book.name || 'Sin título').slice(0, 1))}</b></div><div class="book-info"><p class="book-category">${escapeHtml(book.category || 'Lecturas')}</p><h3>${escapeHtml(book.name || 'Sin título')}</h3><p class="book-author">${escapeHtml(book.author || 'Autor desconocido')}</p><strong>${money(book.price)}</strong></div></article>`).join('') : '<article class="book-placeholder"><span>Aún no hay libros en el catálogo.</span><button type="button" data-open-modal>Agregar el primero</button></article>'; }
+        function renderTable() { itemsList.innerHTML = books.length ? books.map((book) => `<tr><td data-label="Libro"><strong>${escapeHtml(book.name || 'Sin título')}</strong><small>${escapeHtml(book.author || '')} · ${escapeHtml(book.catalogId || book.id)}</small></td><td data-label="Formato">${escapeHtml(book.format || 'Físico')}</td><td data-label="Precio">${money(book.price)}</td><td data-label="Stock"><span class="stock">${clampStock(book.stock)}</span></td><td class="row-actions"><button class="edit-button" type="button" data-edit-id="${book.id}">Editar</button><button class="delete-button" type="button" data-delete-id="${book.id}">Eliminar</button></td></tr>`).join('') : '<tr class="empty-row"><td colspan="5">Aún no hay libros registrados</td></tr>'; }
+        async function loadBooks() { const snapshot = await getDocs(itemsCollection); books = snapshot.docs.map((item) => ({ id: item.id, catalogId: item.data().catalogId || item.id, ...item.data() })).sort((first, second) => (second.createdAt?.seconds || 0) - (first.createdAt?.seconds || 0)); renderBooks(); renderTable(); }
+        const setModal = (open) => { modal.classList.toggle('is-visible', open); modal.setAttribute('aria-hidden', String(!open)); document.body.classList.toggle('modal-open', open); if (open) document.querySelector('#item-name').focus(); }; const resetForm = () => { form.reset(); document.querySelector('#item-id').value = ''; document.querySelector('#submit-button').textContent = '+ Agregar libro'; document.querySelector('#cancel-edit').hidden = true; }; const startEdit = (book) => { Object.entries(book).forEach(([key, value]) => { const input = form.elements[key]; if (input) input.value = value; }); document.querySelector('#submit-button').textContent = 'Guardar cambios'; document.querySelector('#cancel-edit').hidden = false; document.querySelector('#item-name').focus(); };
+        document.querySelector('#open-system').addEventListener('click', () => setModal(true)); document.addEventListener('click', (event) => { if (event.target.closest('[data-open-modal]')) setModal(true); if (event.target.closest('[data-close-modal]')) setModal(false); const editId = event.target.closest('[data-edit-id]')?.dataset.editId, deleteId = event.target.closest('[data-delete-id]')?.dataset.deleteId; if (editId) startEdit(books.find((book) => book.id === editId)); if (deleteId && window.confirm('¿Eliminar este libro del catálogo?')) deleteDoc(doc(db, 'items', deleteId)).then(loadBooks); }); document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && modal.classList.contains('is-visible')) setModal(false); }); document.querySelector('#cancel-edit').addEventListener('click', resetForm);
+        form.addEventListener('submit', async (event) => { event.preventDefault(); if (!form.reportValidity()) return; const data = new FormData(form), id = data.get('id'), book = { name: data.get('name').trim(), author: data.get('author').trim(), format: data.get('format'), category: data.get('category').trim(), isbn: String(data.get('isbn') || '').replace(/[-\s]/g, ''), price: Number.parseInt(data.get('price'), 10) || 0, stock: clampStock(data.get('stock')), description: data.get('description').trim() }; if (id) await updateDoc(doc(db, 'items', id), book); else await addDoc(itemsCollection, { ...book, catalogId: stableId(), createdAt: serverTimestamp() }); resetForm(); await loadBooks(); });
+        loadBooks().catch(() => { itemsList.innerHTML = '<tr class="empty-row"><td colspan="5">No se pudo cargar el catálogo. Revisa la conexión con Firebase.</td></tr>'; booksGrid.innerHTML = '<article class="book-placeholder"><span>El catálogo no está disponible en este momento.</span></article>'; });
     </script>
 </body>
 </html>
