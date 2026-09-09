@@ -70,8 +70,9 @@ h2 { margin-bottom: 10px; font-size: clamp(2.2rem, 4vw, 3.5rem); line-height: 1.
 .close-button { width: 38px; height: 38px; border: 1px solid #6c4b39; color: #d9bda6; background: transparent; font-size: 1.5rem; }
 .item-form { display: grid; grid-template-columns: 1.3fr 1.1fr 1fr .75fr .7fr; gap: 13px; align-items: end; margin-bottom: 28px; }
 .item-form label { display: grid; gap: 7px; color: #c9ae97; font-size: .69rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
-.item-form input { width: 100%; min-width: 0; border: 1px solid #654735; border-radius: 0; padding: 11px; color: #fff2e3; background: #281a15; outline: none; }
-.item-form input:focus { border-color: #e4a76b; }
+.item-form input, .item-form select { width: 100%; min-width: 0; border: 1px solid #654735; border-radius: 0; padding: 11px; color: #fff2e3; background: #281a15; outline: none; }
+.item-form input:focus, .item-form select:focus { border-color: #e4a76b; }
+.item-form select { appearance: none; }
 .description-field { grid-column: 1 / 4; }
 .form-actions { display: flex; grid-column: 4 / -1; gap: 8px; }
 .add-button, .cancel-button { border: 1px solid #e4a76b; padding: 11px 14px; white-space: nowrap; }
